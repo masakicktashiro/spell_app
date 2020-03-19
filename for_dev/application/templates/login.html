@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block headline %}
+{{title}}
+headline
+{% endblock %}
+
+{% block content %}
+<div class="register">
+    <h3>サインイン</h3>
+    <form method="post" class="input-form login-form" action="/login/">
+        <p>ユーザ名</p>
+        <input type="text" class="id" name="id" id="id">
+        <p>パスワード</p>
+        <input type="password" class="pass" name="pass" id="pass">
+        <br />
+        <input type="submit" value="送信" class="submit-btn">
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

@@ -1,15 +1,23 @@
 import torch
-from transformers import *
+from transformers import AlbertForMaskedLM, AlbertTokenizer, BertJapaneseTokenizer, BertForMaskedLM, BertTokenizer
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
 class Predictor:
 
-    def __init__(self, model_name=None):
-        self.eng_model = BertForMaskedLM.from_pretrained("bert-large-uncased-whole-word-masking").to(device)
-        self.eng_tokenizer = BertTokenizer.from_pretrained("bert-large-uncased-whole-word-masking")
-        self.jap_model = BertForMaskedLM.from_pretrained("bert-base-japanese-whole-word-masking").to(device)
-        self.jap_tokenizer = BertJapaneseTokenizer.from_pretrained("bert-base-japanese-whole-word-masking")
+    def __init__(self, model_name=None, lang="jap", model="ALBERT"):
+        self.lang = lang
+        #TODO model_choice
+        if lang == "jap":
+            self.model = BertForMaskedLM.from_pretrained("bert-base-japanese-whole-word-masking").to(device)
+            self.tokenizer = BertJapaneseTokenizer.from_pretrained("bert-base-japanese-whole-word-masking")
+        else:
+            if model == "ALBERT":
+                self.model = AlbertForMaskedLM.from_pretrained("albert-large-v1").to(device)
+                self.tokenizer = AlbertTokenizer.from_pretrained("albert-large-v1")
+            else:
+                self.model = BertForMaskedLM.from_pretrained("bert-large-uncased-whole-word-masking").to(device)
+                self.tokenizer = BertTokenizer.from_pretrained("bert-large-uncased-whole-word-masking")
 
     def forward(self, tokens, model):
         """
@@ -26,8 +34,8 @@ class Predictor:
         return output
 
     def predict(self, text, lang="jap", threshold=0.03):
-        model = self.jap_model if lang == "jap" else self.eng_model
-        tokenizer = self.jap_tokenizer if lang == "jap" else self.eng_tokenizer
+        model = self.model
+        tokenizer = self.tokenizer
         self.vocab_size = tokenizer.vocab_size
         tokens = torch.tensor([tokenizer.encode(text)]).to(device)
         with torch.no_grad():
@@ -42,8 +50,10 @@ class Predictor:
                     flg = True
                 print(tokenizer.decode(tokens[0].cpu()))
         print(tokens[0])
-        output_tokens = tokenizer.decode(tokens[0].cpu())
-        return output_tokens[1:-1]
+        output_tokens = tokenizer.decode(tokens[0][1:-1].cpu())
+        if self.lang == "jap":
+            output_tokens = output_tokens.replace(" ", "")
+        return output_tokens
 
 if __name__ == "__main__":
     predictor = Predictor()

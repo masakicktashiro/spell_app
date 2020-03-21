@@ -6,8 +6,8 @@ import mysql.connector as mydb
 import hashlib
 
 sys.path.append("/Users/masakitashiro/Documents/machine-learning/app_spell/for_dev/")
-#from ml.model_api import Predictor
-from ml.fake_model_api import Predictor
+from ml.model_api import Predictor
+#from ml.fake_model_api import Predictor
 
 app = Flask(__name__)
 api = Api(app)
@@ -41,11 +41,12 @@ class LoginAPI(MethodView):
             #TODO
             session["login"] = True
             cur.execute("insert into members values ('%s', '%s')"%(name, _pass))
+            conn.commit()
             cur.close()
             conn.close()
             return redirect("/")
         else:
-            if res == _pass:
+            if res[0] == _pass:
                 session["login"] = True
             else:
                 session["login"] = False
@@ -80,12 +81,12 @@ class MainAPI(MethodView):
         return render_template("main.html", result=pred, text=text)
 
     def post(self):
-        predictor = Predictor()
         text = request.form.get("text", "", type=str)
+        lang = request.form.get("lang", "jap", type=str)
         session["text"] = text
-        pred = predictor.predict(text)
+        predictor = Predictor(lang=lang)
+        pred = predictor.predict(text, lang=lang)
         session["pred"] = pred
-        print(text, pred)
         return redirect("/")
 
 class Logout(MethodView):

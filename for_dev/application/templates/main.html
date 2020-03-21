@@ -29,13 +29,13 @@
                     <textarea type="text" class="input-area" name="text" id="text" placeholder="入力">{{text}}</textarea>
                     <div class="model-config">
                         <p>言語(language)</p>
-                        <label><input type="radio" name="lang" checked>日本語</label>
-                        <label><input type="radio" name="lang">English</label>
+                        <label><input type="radio" name="lang" value="jap" checked>日本語</label>
+                        <label><input type="radio" name="lang" value="eng">English</label>
                     </div>
                     <div class="model-config">
                         <p>モデル(model)</p>
-                        <label><input type="radio" name="model_name" checked>BERT</label>
-                        <label><input type="radio" name="model_name">その他</label>
+                        <label><input type="radio" name="model_name" checked value="BERT">BERT</label>
+                        <label><input type="radio" name="model_name" value="else">その他</label>
                     </div>
                     <div class="buttons">
                         <button name="action" value="clear" type="button" class="clear-button">クリア</button>

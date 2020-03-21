@@ -5,13 +5,13 @@ from flask_restful import Api, Resource
 import mysql.connector as mydb
 import hashlib
 
-sys.path.append("/Users/masakitashiro/Documents/machine-learning/app_spell/for_dev/")
+sys.path.append("/home/")
 from ml.model_api import Predictor
 #from ml.fake_model_api import Predictor
 
 app = Flask(__name__)
 api = Api(app)
-app.secret_key = b"hogefugahoge"
+app.secret_key = b"hogefugahoge" #TODO
 salt = "masakick" #TODO
 
 member_data = {} #TODO

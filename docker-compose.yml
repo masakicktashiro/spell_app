@@ -8,7 +8,7 @@ services:
     tty: yes
     environment:
       TZ: Asia/Tokyo
-      FLASK_APP: app.py
+      FLASK_APP: application/app.py
     depends_on:  # apiサーバーはdbサーバーが立ってから起動
       - db
     networks:  # apiとdbを接続するための共通ネットワーク指定
@@ -19,11 +19,12 @@ services:
     ports:
       - '3306:3306'
     environment:
-      MYSQL_ROOT_PASSWORD: masakick
+      MYSQL_ROOT_PASSWORD: masakick #TODO
       MYSQL_DATABASE: testdb
       TZ: Asia/Tokyo
     volumes:
-      - ./db-data:/var/lib/mysql
+      - ./_mysql/db-data:/var/lib/mysql
+      - ./_mysql/sqls:/docker-entrypoint-initdb.d
     command: mysqld
     networks:
       - app_net

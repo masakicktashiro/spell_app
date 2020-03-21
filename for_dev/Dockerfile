@@ -19,7 +19,8 @@ RUN pip3 install jupyter click numpy \
 
 RUN pip3 install    flask \
                     flask_restful \
-                    transformers
+                    transformers \
+		    uwsgi
 RUN pip3 install  torch==1.4.0+cpu torchvision==0.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
 ADD ./ /home/
@@ -27,4 +28,5 @@ RUN apt-get update \
     && apt-get install -y locales \
     && locale-gen ja_JP.UTF-8 \
     && echo "export LANG=ja_JP.UTF-8" >> ~/.bashrc
-#CMD ["/usr/bin/python3", "/home/application/app.py"]
+WORKDIR /home
+CMD ["uwsgi","--ini","/home/uwsgi.ini"]

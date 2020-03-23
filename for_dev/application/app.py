@@ -104,4 +104,5 @@ app.add_url_rule("/logout/", view_func=Logout.as_view("logout"))
 
 
 if __name__ == '__main__':
-    app.run(debug = True, host="0.0.0.0") #TODO
+    app.run()
+    #app.run(debug = True, host="0.0.0.0") #TODO

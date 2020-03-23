@@ -1,5 +1,5 @@
 import sys
-from flask import Flask, request, render_template, session, redirect
+from flask import Flask, request, render_template, session, redirect, url_for
 from flask.views import MethodView
 from flask_restful import Api, Resource
 import mysql.connector as mydb
@@ -44,7 +44,7 @@ class LoginAPI(MethodView):
             conn.commit()
             cur.close()
             conn.close()
-            return redirect("/")
+            return redirect(url_for("index"))
         else:
             if res[0] == _pass:
                 session["login"] = True
@@ -64,14 +64,14 @@ class LoginAPI(MethodView):
         conn.close()
         session["id"] = name
         if session["login"]:
-            return redirect("/")
+            return redirect(url_for("index"))
         else:
             return render_template("login.html")
 
 class MainAPI(MethodView):
     def get(self):
         if session.get("login") is None or not session["login"]:
-            return redirect("/login/")
+            return redirect(url_for("login"))
         if "text" in session:
             text = session["text"]
             pred = session["pred"]
@@ -87,7 +87,7 @@ class MainAPI(MethodView):
         predictor = Predictor(lang=lang)
         pred = predictor.predict(text, lang=lang)
         session["pred"] = pred
-        return redirect("/")
+        return redirect(url_for("index"))
 
 class Logout(MethodView):
     def get(self):
@@ -96,11 +96,11 @@ class Logout(MethodView):
         if "text" in session:
             session.pop("text")
             session.pop("pred")
-        return redirect("/login/")
+        return redirect(url_for("login"))
 
-app.add_url_rule("/login/", view_func=LoginAPI.as_view("login"))
-app.add_url_rule("/", view_func=MainAPI.as_view("hoge"))
-app.add_url_rule("/logout/", view_func=Logout.as_view("logout"))
+app.add_url_rule("/login/", endpoint="login",  view_func=LoginAPI.as_view("login"))
+app.add_url_rule("/", endpoint="index", view_func=MainAPI.as_view("hoge"))
+app.add_url_rule("/logout/", endpoint="logout", view_func=Logout.as_view("logout"))
 
 
 if __name__ == '__main__':

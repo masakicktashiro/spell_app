@@ -1,9 +1,10 @@
 # SPELL-APP
 
 ### Prerequisites
-docker
-docker-compose
+- docker
+- docker-compose
 
+more than 4G memory should be allocated to docker
 ### install
 git clone https://github.com/masakicktashiro/spell_app.git
 

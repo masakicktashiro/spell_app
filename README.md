@@ -4,6 +4,9 @@
 docker
 docker-compose
 
+### install
+git clone https://github.com/masakicktashiro/spell_app.git
+
 ## Deployment
 change the mysql password
 22nd line of spell_app/docker-compose.yml
@@ -16,5 +19,6 @@ password='yourpassword',
 ```
 Then
 ```
+cd spell_app
 docker-compose up -d
 ```
